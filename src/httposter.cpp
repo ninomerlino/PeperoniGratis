@@ -1,5 +1,9 @@
 #include "httposter.h"
 
+Sender::~Sender(){
+    WiFi.disconnect();
+}
+
 Sender::Sender(char* ssid, char* password, String serverName, int port){
     this->ssid = ssid;
     this->password = password;
