@@ -1,4 +1,5 @@
-#include <Arduino.h>
+#include "util.h"
+#include "battery.h"
 
 // Load Wi-Fi library
 #include <WiFi.h>
@@ -12,23 +13,8 @@ WiFiServer server(80);
 
 // Variable to store the HTTP request
 String header;
+Battery battery(BATTERY_PIN);
 
-// Auxiliar variables to store the current output state
-float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-float get_charge(){
-  float raw = analogRead(34);
-  Serial.printf("Raw value %f \n", raw);
-  raw = raw / 4095.0 * 3.3;
-  Serial.printf("Caluclated value %f \n", raw);
-  raw = mapfloat(raw, 0.0, 2.6, 0, 100);
-  Serial.printf("Mapped value %f \n", raw);
-  Serial.println(" ");
-  return raw;
-}
 
 void setup() {
   Serial.begin(9600);
@@ -76,7 +62,7 @@ void loop(){
             client.println("<body><h1>ESP32 Web Server</h1>");
             
             // Display current state, and ON/OFF buttons for GPIO 26  
-            client.printf("<p>Battery charge : %.0f%</p>\n", get_charge());
+            client.printf("<p>Battery charge : %.0f%</p>\n", battery.getCharge());
             client.println("</body></html>");
             // The HTTP response ends with another blank line
             client.println();
