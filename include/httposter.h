@@ -9,6 +9,5 @@ class Sender{
     public:
         Sender(char* ssid, char* password, String serverName, int port);
         Sender() = default;
-        ~Sender();
-        void send();
+        void send(float charge);
 };

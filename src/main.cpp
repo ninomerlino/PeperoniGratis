@@ -8,12 +8,11 @@ Sender sender;
 
 void setup() {
   Serial.begin(115200);
-  sender = Sender(SSID, PASSWORD, SERVER_ADDRESS, SERVER_PORT);
+  sender = Sender(SSID, PASSWORD, SERVER_ADDRESS, 8000);
   battery = Battery(BATTERY_PIN);
 }
 
 void loop(){
-  battery.getCharge();
-  sender.send();
+  sender.send(battery.getCharge());
   delay(1000);
 }

@@ -1,9 +1,5 @@
 #include "httposter.h"
 
-Sender::~Sender(){
-    WiFi.disconnect();
-}
-
 Sender::Sender(char* ssid, char* password, String serverName, int port){
     this->ssid = ssid;
     this->password = password;
@@ -15,20 +11,25 @@ Sender::Sender(char* ssid, char* password, String serverName, int port){
         delay(500);
         Serial.println("[WIFI] Connecting to WiFi..");
     }
-    Serial.println("[WIFI] Connected to the WiFi network");
+    Serial.print("[WIFI] Connected to WiFi network with IP Address: ");
+    Serial.println(WiFi.localIP());
 }
 
-void Sender::send(){
+void Sender::send(float charge){
     if(WiFi.status() == WL_CONNECTED){
         HTTPClient http;
-        http.begin(this->serverName);
+        http.begin((serverName+"?charge="+String(charge)).c_str());
+
         int httpCode = http.GET();
+
         if(httpCode > 0){
-            String payload = http.getString();
-            Serial.println(payload);
+            Serial.println("[HTTP] GET... code: " + String(httpCode));
         }else{
             Serial.println("[HTTP] GET... failed, error: " + http.errorToString(httpCode));
         }
+
         http.end();
+    }else{
+        Serial.println("[HTTP] Not connected to WiFi");
     }
 }
