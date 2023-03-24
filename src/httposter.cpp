@@ -16,19 +16,22 @@ Sender::Sender(char* ssid, char* password, String serverName, int port){
 }
 
 void Sender::send(float charge){
+    String serverCharge = serverName+"/update-data?charge="+String(charge);
     if(WiFi.status() == WL_CONNECTED){
         HTTPClient http;
-        http.begin((serverName+"?charge="+String(charge)).c_str());
+        if(http.begin(serverCharge.c_str())){
+            int httpCode = http.GET();
 
-        int httpCode = http.GET();
+            if(httpCode > 0){
+                Serial.println("[HTTP] GET... code: " + String(httpCode));
+            }else{
+                Serial.println("[HTTP] GET... failed, error: " + http.errorToString(httpCode));
+            }
 
-        if(httpCode > 0){
-            Serial.println("[HTTP] GET... code: " + String(httpCode));
+            http.end();
         }else{
-            Serial.println("[HTTP] GET... failed, error: " + http.errorToString(httpCode));
+            Serial.println("[HTTP] Unable to connect to server");
         }
-
-        http.end();
     }else{
         Serial.println("[HTTP] Not connected to WiFi");
     }

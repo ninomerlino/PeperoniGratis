@@ -20,7 +20,7 @@ float Battery::getCharge()
     Serial.printf("Raw value %f \n", raw);
     raw = raw / 4095.0 * 3.3;
     Serial.printf("Caluclated value %f \n", raw);
-    raw = mapfloat(raw, 0.0, 2.6, 0, 100);
+    raw = mapfloat(raw, 0.0, 2.8, 0, 100);
     Serial.printf("Mapped value %f \n", raw);
     Serial.println(" ");
     return raw;
