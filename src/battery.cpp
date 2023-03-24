@@ -1,4 +1,7 @@
 #include "battery.h"
+#include "logger.h"
+
+extern Logger logger;
 
 Battery::Battery(int readingPin){
     this->readingPin = readingPin;
@@ -17,11 +20,11 @@ float Battery::mapfloat(float x, float in_min, float in_max, float out_min, floa
 float Battery::getCharge()
 {
     raw = analogRead(34);
-    Serial.printf("Raw value %f \n", raw);
+    logger.log("Raw value %f",DEBUG, raw);
     raw = raw / 4095.0 * 3.3;
-    Serial.printf("Caluclated value %f \n", raw);
+    Serial.printf("Caluclated value %f",DEBUG, raw);
     raw = mapfloat(raw, 0.0, 2.8, 0, 100);
-    Serial.printf("Mapped value %f \n", raw);
+    Serial.printf("Mapped value %f",DEBUG, raw);
     Serial.println(" ");
     return raw;
 }
