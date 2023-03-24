@@ -15,8 +15,8 @@ Sender::Sender(char* ssid, char* password, String serverName, int port){
     Serial.println(WiFi.localIP());
 }
 
-void Sender::send(float charge){
-    String serverCharge = serverName+"/update-data?charge="+String(charge);
+void Sender::sendGetRequest(String fields){
+    String serverCharge = serverName+"/update-data?"+fields;
     if(WiFi.status() == WL_CONNECTED){
         HTTPClient http;
         if(http.begin(serverCharge.c_str())){
@@ -35,4 +35,24 @@ void Sender::send(float charge){
     }else{
         Serial.println("[HTTP] Not connected to WiFi");
     }
+}
+
+void Sender::send(float charge){
+    String fields = "charge="+String(charge);
+    sendGetRequest(fields);
+}
+
+void Sender::send(float charge, float temperature){
+    String fields = "charge="+String(charge)+"&temperature="+String(temperature);
+    sendGetRequest(fields);
+}
+
+void Sender::send(float charge, float temperature, float humidity){
+    String fields = "charge="+String(charge)+"&temperature="+String(temperature)+"&humidity="+String(humidity);
+    sendGetRequest(fields);
+}
+
+void Sender::send(float charge, float temperature, float humidity, float soilMoisture){
+    String fields = "charge="+String(charge)+"&temperature="+String(temperature)+"&humidity="+String(humidity)+"&soilMoisture="+String(soilMoisture);
+    sendGetRequest(fields);
 }
