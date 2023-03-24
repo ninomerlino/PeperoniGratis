@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include "optional.h"
 
 class Sender{
     private:
@@ -10,5 +11,5 @@ class Sender{
     public:
         Sender(char* ssid, char* password, String serverName, int port);
         Sender() = default;
-        bool send(float* charge=nullptr, float* temperature=nullptr, float* humidity=nullptr, float* soilMoisture=nullptr);
+        bool send(Option<float> charge, Option<float> temperature = Option<float>(), Option<float> humidity = Option<float>(), Option<float> soilMoisture = Option<float>());
 };
