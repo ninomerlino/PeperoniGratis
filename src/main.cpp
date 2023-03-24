@@ -8,7 +8,7 @@ Sender sender;
 
 void setup() {
   Serial.begin(115200);
-  sender = Sender(SSID, PASSWORD, SERVER_ADDRESS, 8000);
+  sender = Sender(SSID, PASSWORD, SERVER_ADDRESS, SERVER_PORT);
   battery = Battery(BATTERY_PIN);
 }
 

@@ -5,7 +5,3 @@ SoilMoistureSensor::SoilMoistureSensor(int readingPin){
     raw = 0;
     moisture = 0;
 }
-
-SoilMoistureSensor::~SoilMoistureSensor(){
-}
-
