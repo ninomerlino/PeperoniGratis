@@ -2,9 +2,11 @@
 #include "battery.h"
 #include "httposter.h"
 #include "credentials.h"
+#include "logger.h"
 
 Battery battery;
 Sender sender;
+Logger logger(&Serial, DEBUG);
 
 void setup() {
   Serial.begin(115200);

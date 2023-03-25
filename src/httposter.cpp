@@ -1,4 +1,7 @@
 #include "httposter.h"
+#include "logger.h"
+
+extern Logger logger;
 
 Sender::Sender(char* ssid, char* password, String serverName, int port){
     this->ssid = ssid;
@@ -9,50 +12,73 @@ Sender::Sender(char* ssid, char* password, String serverName, int port){
     WiFi.begin(this->ssid, this->password);
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        Serial.println("[WIFI] Connecting to WiFi..");
+        logger.log("[WIFI] Connecting to WiFi..", INFO);
     }
-    Serial.print("[WIFI] Connected to WiFi network with IP Address: ");
-    Serial.println(WiFi.localIP());
+    logger.log("[WIFI] Connected to WiFi network with IP Address: " + WiFi.localIP(), INFO);
 }
 
-void Sender::sendGetRequest(String fields){
-    String serverCharge = serverName+"/update-data?"+fields;
+bool Sender::sendGetRequest(const char *endpoit){
     if(WiFi.status() == WL_CONNECTED){
         HTTPClient http;
-        if(http.begin(serverCharge.c_str())){
+        if(http.begin((serverName+endpoit).c_str())){
             int httpCode = http.GET();
-
             if(httpCode > 0){
-                Serial.println("[HTTP] GET... code: " + String(httpCode));
+                logger.log("[HTTP] GET... code: " + String(httpCode));
+                return true;
             }else{
-                Serial.println("[HTTP] GET... failed, error: " + http.errorToString(httpCode));
+                logger.log("[HTTP] GET... failed, error: " + http.errorToString(httpCode), ERROR);
+                return false;
             }
-
             http.end();
         }else{
-            Serial.println("[HTTP] Unable to connect to server");
+            logger.log("[HTTP] Unable to connect to server", ERROR);
+            return false;
         }
     }else{
-        Serial.println("[HTTP] Not connected to WiFi");
+        logger.log("[HTTP] Not connected to WiFi", ERROR);
+        return false;
     }
 }
 
-void Sender::send(float charge){
-    String fields = "charge="+String(charge);
-    sendGetRequest(fields);
+bool Sender::sendPostRequest(const char *endpoit,const char *payload){
+    if(WiFi.status() == WL_CONNECTED){
+        HTTPClient http;
+        if(http.begin((serverName+endpoit).c_str())){
+            http.addHeader("Content-Type", "application/json");
+            int httpCode = http.POST(payload);
+            if(httpCode > 0){
+                logger.log("[HTTP] POST... code: " + String(httpCode));
+                return true;
+            }else{
+                logger.log("[HTTP] POST... failed, error: " + http.errorToString(httpCode), ERROR);
+                return false;
+            }
+            http.end();
+        }else{
+            logger.log("[HTTP] Unable to connect to server", ERROR);
+            return false;
+        }
+    }else{
+        logger.log("[HTTP] Not connected to WiFi", ERROR);
+        return false;
+    }
 }
 
-void Sender::send(float charge, float temperature){
-    String fields = "charge="+String(charge)+"&temperature="+String(temperature);
-    sendGetRequest(fields);
-}
-
-void Sender::send(float charge, float temperature, float humidity){
-    String fields = "charge="+String(charge)+"&temperature="+String(temperature)+"&humidity="+String(humidity);
-    sendGetRequest(fields);
-}
-
-void Sender::send(float charge, float temperature, float humidity, float soilMoisture){
-    String fields = "charge="+String(charge)+"&temperature="+String(temperature)+"&humidity="+String(humidity)+"&soilMoisture="+String(soilMoisture);
-    sendGetRequest(fields);
+bool Sender::send(Option<float> charge, Option<float> temperature, Option<float> humidity, Option<float> soilMoisture){
+    String payload = "{";
+    if(charge.isSet()){
+        payload += "\"charge\":"+String(charge.get())+",";
+    }
+    if(temperature.isSet()){
+        payload += "\"temperature\":"+String(temperature.get())+",";
+    }
+    if(humidity.isSet()){
+        payload += "\"humidity\":"+String(humidity.get())+",";
+    }
+    if(soilMoisture.isSet()){
+        payload += "\"soilMoisture\":"+String(soilMoisture.get())+",";
+    }
+    payload.remove(payload.length()-1,1);
+    payload += "}";
+    return sendPostRequest("/update-data",payload.c_str());
 }
