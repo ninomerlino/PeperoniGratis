@@ -8,6 +8,7 @@ private:
     const char* password;
     String serverName;
     bool sendPostRequest(const char* endpoit, const char* payload);
+    bool sendGetRequest(const char* endpoit);
 public:
     Sender(char* ssid, char* password, String serverName, int port);
     Sender() = default;

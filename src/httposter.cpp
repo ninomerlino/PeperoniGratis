@@ -17,6 +17,29 @@ Sender::Sender(char* ssid, char* password, String serverName, int port){
     logger.log("[WIFI] Connected to WiFi network with IP Address: " + WiFi.localIP(), INFO);
 }
 
+bool Sender::sendGetRequest(const char *endpoit){
+    if(WiFi.status() == WL_CONNECTED){
+        HTTPClient http;
+        if(http.begin((serverName+endpoit).c_str())){
+            int httpCode = http.GET();
+            if(httpCode > 0){
+                logger.log("[HTTP] GET... code: " + String(httpCode));
+                return true;
+            }else{
+                logger.log("[HTTP] GET... failed, error: " + http.errorToString(httpCode), ERROR);
+                return false;
+            }
+            http.end();
+        }else{
+            logger.log("[HTTP] Unable to connect to server", ERROR);
+            return false;
+        }
+    }else{
+        logger.log("[HTTP] Not connected to WiFi", ERROR);
+        return false;
+    }
+}
+
 bool Sender::sendPostRequest(const char *endpoit,const char *payload){
     if(WiFi.status() == WL_CONNECTED){
         HTTPClient http;
