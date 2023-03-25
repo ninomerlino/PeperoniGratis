@@ -63,22 +63,3 @@ bool Sender::sendPostRequest(const char *endpoit,const char *payload){
         return false;
     }
 }
-
-bool Sender::send(Option<float> charge, Option<float> temperature, Option<float> humidity, Option<float> soilMoisture){
-    String payload = "{";
-    if(charge.isSet()){
-        payload += "\"charge\":"+String(charge.get())+",";
-    }
-    if(temperature.isSet()){
-        payload += "\"temperature\":"+String(temperature.get())+",";
-    }
-    if(humidity.isSet()){
-        payload += "\"humidity\":"+String(humidity.get())+",";
-    }
-    if(soilMoisture.isSet()){
-        payload += "\"soilMoisture\":"+String(soilMoisture.get())+",";
-    }
-    payload.remove(payload.length()-1,1);
-    payload += "}";
-    return sendPostRequest("/update-data",payload.c_str());
-}

@@ -3,10 +3,12 @@
 #include "httposter.h"
 #include "credentials.h"
 #include "logger.h"
+#include "payload.h"
 
 Battery battery;
 Sender sender;
 Logger logger(&Serial, DEBUG);
+Payload payload;
 
 void setup() {
   Serial.begin(115200);
@@ -15,6 +17,9 @@ void setup() {
 }
 
 void loop(){
-  sender.send(battery.getCharge());
+  payload.add_field("battery", battery.getCharge());
+  sender.sendPostRequest("/update", payload.to_string());
   delay(1000);
+  //clear after sending
+  payload.clear();
 }
