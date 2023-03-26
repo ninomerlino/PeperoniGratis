@@ -1,0 +1,2 @@
+Qui dovrebbe esserci influx non lo carico che senno diventa enorme per niente la repo
+che poi se lo devi mettere su rasberry devi prendere la versione per arm
