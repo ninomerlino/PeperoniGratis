@@ -1,3 +1,5 @@
+#ifndef __SOIL__
+#define __SOIL__
 #include "util.h"
 
 class SoilMoistureSensor {
@@ -9,3 +11,4 @@ class SoilMoistureSensor {
     float raw;
     float moisture;
 };
+#endif

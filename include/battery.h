@@ -1,3 +1,5 @@
+#ifndef __BATTERY__
+#define __BATTERY__
 #include "util.h"
 
 class Battery{
@@ -13,3 +15,4 @@ class Battery{
         ~Battery();	
         float getCharge();
 };
+#endif

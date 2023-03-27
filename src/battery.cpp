@@ -22,9 +22,8 @@ float Battery::getCharge()
     raw = analogRead(34);
     logger.log("[Battery]Raw value %f",DEBUG, raw);
     raw = raw / 4095.0 * 3.3;
-    Serial.printf("[Battery]Caluclated value %f",DEBUG, raw);
+    logger.log("[Battery]Caluclated value %f",DEBUG, raw);
     raw = mapfloat(raw, 0.0, 2.8, 0, 100);
-    Serial.printf("[Battery]Mapped value %f",DEBUG, raw);
-    Serial.println(" ");
+    logger.log("[Battery]Mapped value %f",DEBUG, raw);
     return raw;
 }

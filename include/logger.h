@@ -1,3 +1,5 @@
+#ifndef __LOGGER__
+#define __LOGGER__
 #include "util.h"
 
 enum LogLevel{
@@ -15,8 +17,9 @@ class Logger{
 
     public:
     Logger() = default;
-    Logger(HardwareSerial* hserial, LogLevel filter);
-    void log(const Printable &str, LogLevel level);
-    void log(const String& str, LogLevel level);
+    Logger(HardwareSerial* hserial, LogLevel filter=DEBUG);
+    void log(const Printable &str, LogLevel level=DEBUG);
+    void log(const String& str, LogLevel level=DEBUG);
     void log(const char* fmt, LogLevel level, ...);
 };
+#endif
