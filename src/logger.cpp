@@ -1,11 +1,11 @@
 #include "logger.h"
 
-Logger::Logger(HardwareSerial* hserial, LogLevel filter){
+Logger::Logger(HardwareSerial* hserial, LogLevel filter=DEBUG){
     this->hserial = hserial;
     this->filter = filter;
 }
 
-void Logger::log(const Printable &str, LogLevel level){
+void Logger::log(const Printable &str, LogLevel level=DEBUG){
     if(level >= filter){
         hserial->print(levelToString(level));
         hserial->print(": ");
@@ -13,7 +13,7 @@ void Logger::log(const Printable &str, LogLevel level){
     }
 }
 
-void Logger::log(const String &str, LogLevel level){
+void Logger::log(const String &str, LogLevel level=DEBUG){
     if(level >= filter){
         hserial->print(levelToString(level));
         hserial->print(": ");

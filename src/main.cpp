@@ -1,76 +1,36 @@
 #include "util.h"
 #include "battery.h"
-#include "credentials.h"
 #include "logger.h"
-#include <InfluxDbClient.h>
+#include "serverConnection.h"
 
 
 Battery battery;
-Logger logger(&Serial, DEBUG);
-InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
-
-void connectToWifi(uint64_t timeout = 10000){
-  uint64_t start = millis();
-  WiFi.begin(SSID, PASSWORD);
-  while(WiFi.status() != WL_CONNECTED){
-    delay(500);
-    Serial.print(".");
-    if(millis() - start > timeout){
-      logger.log("Wifi connection timeout", ERROR);
-      return;
-    }
-  }
-  logger.log(WiFi.localIP(),INFO);
-}
-
-void connectToInfluxDB(uint64_t timeout = 10000){
-  uint64_t start = millis();
-  while(!client.validateConnection()){
-    delay(500);
-    Serial.print(".");
-    if(millis() - start > timeout){
-      logger.log("InfluxDB connection timeout", ERROR);
-      logger.log(client.getLastErrorMessage(), ERROR);
-      return;
-    }
-  }
-}
+Logger logger;
+InfluxServer server;
 
 void setup() {
   Serial.begin(115200);
+  logger = Logger(&Serial, LogLevel::DEBUG);
   battery = Battery(BATTERY_PIN);
+  server = InfluxServer(&logger);
 
-  logger.log("Connecting to Wifi",INFO);
-  connectToWifi();
+  logger.log("Connecting to Wifi", LogLevel::INFO);
 
-  logger.log("Setting time",INFO);
+  logger.log("Setting time", LogLevel::INFO);
+
 	timeSync(TZ_INFO, "pool.ntp.org", "time.nis.gov");
 
-  logger.log("Connecting to InfluxDB",INFO);
-  connectToInfluxDB();
+  logger.log("Connecting to InfluxDB", LogLevel::INFO);
 
-  logger.log("Setup completed",INFO);
+  logger.log("Setup completed", LogLevel::INFO);
 }
 
 void loop(){
   Point point("Serra");
   point.addField("battery", battery.getCharge());
-
-  if(!WiFi.isConnected()){
-    logger.log("Wifi connection lost", ERROR);
-    connectToWifi();
-    return;
-  }
-  if(!client.isConnected()){
-    logger.log("InfluxDB connection lost", ERROR);
-    connectToInfluxDB();
-    return;
-  }
-
-  if (!client.writePoint(point)) {
-    logger.log("InfluxDB write failed: ", ERROR);
-    logger.log(client.getLastErrorMessage(), ERROR);
-
-  }
+  point.addField("moisture", 16);
+  point.addField("temperature", 24.5);
+  point.addField("humidity", 75);
+  server.uploadPoint(point);
   delay(1000);
 }

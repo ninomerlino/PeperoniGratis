@@ -1,5 +1,4 @@
-#include "HardwareSerial.h"
-#include "Printable.h"
+#include "util.h"
 
 enum LogLevel{
     DEBUG,
@@ -15,8 +14,9 @@ class Logger{
     String levelToString(LogLevel level);
 
     public:
-    Logger(HardwareSerial* hserial, LogLevel filter=DEBUG);
-    void log(const Printable &str, LogLevel level=DEBUG);
-    void log(const String& str, LogLevel level=DEBUG);
+    Logger() = default;
+    Logger(HardwareSerial* hserial, LogLevel filter);
+    void log(const Printable &str, LogLevel level);
+    void log(const String& str, LogLevel level);
     void log(const char* fmt, LogLevel level, ...);
 };
