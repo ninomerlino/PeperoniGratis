@@ -1,25 +1,193 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Graphs</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <h1>Graphs</h1>
-    <div class="chart-container">
-      <canvas id="batteryChart"></canvas>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Graphs</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="static/script.js"></script>
+  <link rel="stylesheet" href="static/bulma.css">
+</head>
+
+<body onload="setup()">
+  <div class="hero is-primary">
+    <div class="hero-body has-text-centered">
+      <div class="title">
+        Peperoni Gratis
+      </div>
     </div>
-    <div class="chart-container">
-      <canvas id="temperatureChart"></canvas>
+  </div>
+  <div class="section" id="msg_section" style="display: none;">
+    <div class="container">
+      <div class="notification is-danger" id="msg">
+        <button class="delete" onclick="hide_msg()"></button>
+        <span id="msg_text"></span>
+      </div>
     </div>
-    <div class="chart-container">
-      <canvas id="humidityChart"></canvas>
+  </div>
+  <div class="section">
+    <div class="level">
+      <div class="level-item">
+        <div class="field">
+          <label class="label">Last update</label>
+          <div class="control">
+            <input class="input" type="text" id="update_text" placeholder="Temperature" disabled>
+          </div>
+        </div>
+      </div>
+      <div class="level-item">
+        <div class="field">
+          <label class="label">Temperature</label>
+          <div class="control">
+            <input class="input" type="text" id="temperature_text" placeholder="Temperature" disabled>
+          </div>
+        </div>
+      </div>
+      <div class="level-item">
+        <div class="field">
+          <label class="label">Humidity</label>
+          <div class="control">
+            <input class="input" type="text" id="humidity_text" placeholder="Humidity" disabled>
+          </div>
+        </div>
+      </div>
+      <div class="level-item">
+        <div class="field">
+          <label class="label">Moisture</label>
+          <div class="control">
+            <input class="input" type="text" id="moisture_text" placeholder="Moisture" disabled>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="chart-container">
-      <canvas id="soilMoistureChart"></canvas>
+  </div>
+  <div class="section">
+    <div class="tile is-ancestor">
+      <div class="tile is-5 is-vertical is-parent">
+        <div class="tile is-child">
+          <div class="card ">
+            <header class="card-header has-background-primary">
+              <p class="card-header-title">
+                Battery
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <canvas id="battery_chart"></canvas>
+              </div>
+            </div>
+            <footer class="card-footer">
+            </footer>
+          </div>
+        </div>
+        <div class="tile is-child">
+          <div class="card ">
+            <header class="card-header has-background-primary">
+              <p class="card-header-title">
+                Control
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <form>
+                  <div class="field has-addons">
+                    <div class="control">
+                      <a class="button is-static">
+                        Time window
+                      </a>
+                    </div>
+                    <div class="control is-expanded">
+                      <input class="input" id="time_window" type="number" placeholder="Last x hours">
+                    </div>
+                    <div class="control">
+                      <a class="button is-primary" onclick="change_time_window()">
+                        Change
+                      </a>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <div class="control is-expanded">
+                      <a class="button is-primary is-fullwidth" onclick="update()">
+                        Update
+                      </a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <footer class="card-footer">
+          </footer>
+        </div>
+        <div class="tile is-child">
+          <div class="card ">
+            <header class="card-header has-background-primary">
+              <p class="card-header-title">
+                Log
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+              </div>
+            </div>
+            <footer class="card-footer">
+            </footer>
+          </div>
+        </div>
+
+      </div>
+      <div class="tile is-vertical is-parent">
+        <div class="tile is-child">
+          <div class="card ">
+            <header class="card-header has-background-primary">
+              <p class="card-header-title">
+                Temperature
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <canvas id="temperature_chart"></canvas>
+              </div>
+            </div>
+            <footer class="card-footer">
+            </footer>
+          </div>
+        </div>
+        <div class="tile is-child">
+          <div class="card ">
+            <header class="card-header has-background-primary">
+              <p class="card-header-title">
+                Humidity
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <canvas id="humidity_chart"></canvas>
+              </div>
+            </div>
+            <footer class="card-footer">
+            </footer>
+          </div>
+        </div>
+        <div class="tile is-child">
+          <div class="card ">
+            <header class="card-header has-background-primary">
+              <p class="card-header-title">
+                Moisture
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <canvas id="moisture_chart"></canvas>
+              </div>
+            </div>
+            <footer class="card-footer">
+            </footer>
+          </div>
+        </div>
+      </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

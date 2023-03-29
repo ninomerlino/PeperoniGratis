@@ -18,7 +18,7 @@ void setup() {
 
 void loop(){
   payload.add_field("battery", battery.getCharge());
-  sender.sendPostRequest("/update", payload.to_string());
+  sender.sendPostRequest("/api/update", payload.to_string());
   delay(1000);
   //clear after sending
   payload.clear();

@@ -25,10 +25,10 @@ async def update(record: Record):
 @app.get("/api/read")
 async def read(from_time: str | None = None, to_time: str | None = None):
     try:
-        from_time = datetime.fromisoformat(from_time) if from_time is not None else None
-        to_time = datetime.fromisoformat(to_time) if to_time is not None else None
+        from_time = datetime.fromisoformat(from_time.replace('Z','+00:00')) if from_time is not None else None
+        to_time = datetime.fromisoformat(to_time.replace('Z','+00:00')) if to_time is not None else None
     except ValueError as e:
-        return Response(content="Invalid date format", code=400)
+        return Response(content="Invalid date format", status_code=400)
     return store.read(from_time, to_time)
 
 @app.get("/api/read_dump")
