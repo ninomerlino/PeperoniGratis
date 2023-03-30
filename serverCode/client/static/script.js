@@ -40,7 +40,7 @@ function format_date(date) {
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
-function set_label(id, value){
+function set_label(id, value) {
     let label = document.getElementById(id);
     label.value = value;
 }
@@ -51,7 +51,7 @@ var humidityChart = undefined;
 var moistureChart = undefined;
 var dataStore = new DataStore();
 
-function create_battery_chart(data){
+function create_battery_chart(data) {
     batteryChart = new Chart(
         document.getElementById("battery_chart"),
         {
@@ -81,7 +81,7 @@ function create_battery_chart(data){
     );
 }
 
-function create_temperature_chart(data){
+function create_temperature_chart(data) {
     temperatureChart = new Chart(
         document.getElementById("temperature_chart"),
         {
@@ -103,7 +103,7 @@ function create_temperature_chart(data){
     );
 }
 
-function create_humidity_chart(data){
+function create_humidity_chart(data) {
     humidityChart = new Chart(
         document.getElementById("humidity_chart"),
         {
@@ -125,7 +125,7 @@ function create_humidity_chart(data){
     );
 }
 
-function create_moisture_chart(data){
+function create_moisture_chart(data) {
     moistureChart = new Chart(
         document.getElementById("moisture_chart"),
         {
@@ -150,7 +150,7 @@ function create_moisture_chart(data){
 async function setup() {
     await dataStore.update();
     let data = await dataStore.get_data();
-    if(data.length > 0){
+    if (data.length > 0) {
         create_battery_chart();
         create_temperature_chart();
         create_humidity_chart();
@@ -159,7 +159,7 @@ async function setup() {
         set_label("temperature_text", data[data.length - 1]["temperature"]);
         set_label("humidity_text", data[data.length - 1]["humidity"]);
         set_label("moisture_text", data[data.length - 1]["moisture"]);
-    }else{
+    } else {
         show_msg("No data available");
     }
 }
@@ -167,31 +167,31 @@ async function setup() {
 
 async function update() {
     let data = await dataStore.get_data();
-    if(data.length > 0){
-        if(batteryChart == undefined){
+    if (data.length > 0) {
+        if (batteryChart == undefined) {
             create_battery_chart(data);
-        }else{
+        } else {
             batteryChart.data.labels = [""];
             batteryChart.data.datasets[0].data = [data[data.length - 1]["battery"]];
             batteryChart.update();
         }
-        if(temperatureChart == undefined){
+        if (temperatureChart == undefined) {
             create_temperature_chart(data);
-        }else{
+        } else {
             temperatureChart.data.labels = data.map((record) => format_date(new Date(record["time"])));
             temperatureChart.data.datasets[0].data = data.map((record) => record["temperature"]);
             temperatureChart.update();
         }
-        if(humidityChart == undefined){
+        if (humidityChart == undefined) {
             create_humidity_chart(data);
-        }else{
+        } else {
             humidityChart.data.labels = data.map((record) => format_date(new Date(record["time"])));
             humidityChart.data.datasets[0].data = data.map((record) => record["humidity"]);
             humidityChart.update();
         }
-        if(moistureChart == undefined){
+        if (moistureChart == undefined) {
             create_moisture_chart(data);
-        }else{
+        } else {
             moistureChart.data.labels = data.map((record) => format_date(new Date(record["time"])));
             moistureChart.data.datasets[0].data = data.map((record) => record["moisture"]);
             moistureChart.update();
@@ -200,12 +200,12 @@ async function update() {
         set_label("temperature_text", data[data.length - 1]["temperature"]);
         set_label("humidity_text", data[data.length - 1]["humidity"]);
         set_label("moisture_text", data[data.length - 1]["moisture"]);
-    }else{
+    } else {
         show_msg("No data available");
     }
 }
 
-async function change_time_window(){
+async function change_time_window() {
     let hours = document.getElementById("time_window").value;
     dataStore.set_time_window(hours * 60 * 60);
     await dataStore.update();
@@ -216,7 +216,7 @@ function hide_msg() {
     document.getElementById("msg_section").style.display = "none";
 }
 
-function show_msg(text){
+function show_msg(text) {
     document.getElementById("msg_text").innerHTML = text;
     document.getElementById("msg_section").style.display = "block";
 }
