@@ -4,12 +4,12 @@ Payload::Payload(){
     this->serilized_data = "{";
 }
 
-template <typename T> void Payload::add_field(String key, T value){
+void Payload::addField(String key, float value){
     Serial.println("[PAYL] Adding field: " + key + " with value: " + String(value));
     this->serilized_data += "\"" + key + "\":\"" + String(value) + "\",";
 }
 
-const char* Payload::to_string(){
+const char* Payload::toString(){
     this->serilized_data.remove(this->serilized_data.length()-1);
     this->serilized_data += "}";
     Serial.println("[PAY] Payload: " + this->serilized_data);

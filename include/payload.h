@@ -6,7 +6,7 @@ class Payload {
 
     public:
     Payload();
-    template <typename T> void add_field(String key, T value);
-    const char* to_string();
+    void addField(String key, float value);
+    const char* toString();
     void clear();
 };
