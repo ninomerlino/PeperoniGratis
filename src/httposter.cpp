@@ -1,7 +1,4 @@
 #include "httposter.h"
-#include "logger.h"
-
-extern Logger logger;
 
 Sender::Sender(char* ssid, char* password, String serverName, int port){
     this->ssid = ssid;
@@ -10,11 +7,13 @@ Sender::Sender(char* ssid, char* password, String serverName, int port){
     this->serverName = "http://"+serverName+":"+String(port);
 
     WiFi.begin(this->ssid, this->password);
+    Serial.print("[WIFI] Connecting to WiFi");
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        logger.log("[WIFI] Connecting to WiFi..", INFO);
+        Serial.print(".");
     }
-    logger.log("[WIFI] Connected to WiFi network with IP Address: " + WiFi.localIP(), INFO);
+    Serial.println();
+    Serial.println("[WIFI] Connected to WiFi network with IP Address: " + String(WiFi.localIP()));
 }
 
 bool Sender::sendGetRequest(const char *endpoit){
@@ -23,19 +22,19 @@ bool Sender::sendGetRequest(const char *endpoit){
         if(http.begin((serverName+endpoit).c_str())){
             int httpCode = http.GET();
             if(httpCode > 0){
-                logger.log("[HTTP] GET... code: " + String(httpCode));
+                Serial.println("[HTTP] GET... code: " + String(httpCode));
                 return true;
             }else{
-                logger.log("[HTTP] GET... failed, error: " + http.errorToString(httpCode), ERROR);
+                Serial.println("[HTTP] GET... failed, error: " + http.errorToString(httpCode));
                 return false;
             }
             http.end();
         }else{
-            logger.log("[HTTP] Unable to connect to server", ERROR);
+            Serial.println("[HTTP] Unable to connect to server");
             return false;
         }
     }else{
-        logger.log("[HTTP] Not connected to WiFi", ERROR);
+        Serial.println("[HTTP] Not connected to WiFi");
         return false;
     }
 }
@@ -47,19 +46,19 @@ bool Sender::sendPostRequest(const char *endpoit,const char *payload){
             http.addHeader("Content-Type", "application/json");
             int httpCode = http.POST(payload);
             if(httpCode > 0){
-                logger.log("[HTTP] POST... code: " + String(httpCode));
+                Serial.println("[HTTP] POST... code: " + String(httpCode));
                 return true;
             }else{
-                logger.log("[HTTP] POST... failed, error: " + http.errorToString(httpCode), ERROR);
+                Serial.println("[HTTP] POST... failed, error: " + http.errorToString(httpCode));
                 return false;
             }
             http.end();
         }else{
-            logger.log("[HTTP] Unable to connect to server", ERROR);
+            Serial.println("[HTTP] Unable to connect to server");
             return false;
         }
     }else{
-        logger.log("[HTTP] Not connected to WiFi", ERROR);
+        Serial.println("[HTTP] Not connected to WiFi");
         return false;
     }
 }

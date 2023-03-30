@@ -2,12 +2,10 @@
 #include "battery.h"
 #include "httposter.h"
 #include "credentials.h"
-#include "logger.h"
 #include "payload.h"
 
 Battery battery;
 Sender sender;
-Logger logger(&Serial, DEBUG);
 Payload payload;
 
 void setup() {
