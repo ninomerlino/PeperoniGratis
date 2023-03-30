@@ -1,11 +1,15 @@
 #include "util.h"
 
 class SoilMoistureSensor {
-  public:
-    SoilMoistureSensor(int readingPin);
-    float getMoisture();
   private:
     int readingPin;
-    float raw;
+    int minValue;
+    int maxValue;
+    int raw;
     float moisture;
+    void calibrate();
+  public:
+    SoilMoistureSensor(int readingPin);
+    SoilMoistureSensor(int readingPin, int minValue, int maxValue);
+    float getMoisture();
 };
