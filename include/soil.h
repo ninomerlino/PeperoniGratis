@@ -11,5 +11,6 @@ class SoilMoistureSensor {
   public:
     SoilMoistureSensor(int readingPin);
     SoilMoistureSensor(int readingPin, int minValue, int maxValue);
+    SoilMoistureSensor() = default;
     float getMoisture();
 };
