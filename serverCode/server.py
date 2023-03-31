@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from datetime import datetime
 import uvicorn
 from store import Store, Record
-from threading import Thread
+from multiprocessing import Process
 
 
 webServer = FastAPI()
@@ -41,9 +41,9 @@ async def update(record: Record):
 #--------------------------------------------------
 
 if __name__ == "__main__":
-    webThread = Thread(target=uvicorn.run,kwargs={"app":webServer,"port": 8001,"host":"0.0.0.0"})
-    arduinoThread = Thread(target=uvicorn.run,kwargs={"app":arduinoServer,"port": 8000,"host":"0.0.0.0"})
-    webThread.start()
-    arduinoThread.start()
-    webThread.join()
-    arduinoThread.join()
+    webProcess = Process(target=uvicorn.run,kwargs={"app":webServer,"port": 8001,"host":"0.0.0.0"})
+    arduinoProcess = Process(target=uvicorn.run,kwargs={"app":arduinoServer,"port": 8000,"host":"0.0.0.0"})
+    webProcess.start()
+    arduinoProcess.start()
+    webProcess.join()
+    arduinoProcess.join()
