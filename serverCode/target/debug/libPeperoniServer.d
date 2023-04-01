@@ -1,1 +1,0 @@
-/home/pinguinobiricchino/Documents/PlatformIO/Projects/PeperoniGratis/serverCode/target/debug/libPeperoniServer.rlib: /home/pinguinobiricchino/Documents/PlatformIO/Projects/PeperoniGratis/serverCode/src/lib.rs /home/pinguinobiricchino/Documents/PlatformIO/Projects/PeperoniGratis/serverCode/src/store.rs
