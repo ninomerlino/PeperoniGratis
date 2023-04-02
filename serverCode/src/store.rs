@@ -21,6 +21,7 @@ macro_rules! filter_time {
 
 #[derive(Debug, Serialize, Deserialize, Clone, Getters, PartialEq)]
 pub struct Record {
+    #[serde(default="Utc::now")]
     time: DateTime<Utc>,
     battery: Option<f32>,
     temperature: Option<f32>,
@@ -79,7 +80,7 @@ impl Store {
         let mut records = Vec::new();
         let path = path::Path::new(path);
         if path.exists() {
-            let mut file = csv::Reader::from_path(&path)?;
+            let mut file = csv::Reader::from_path(path)?;
             for record in file.deserialize() {
                 let record = record?;
                 records.push(record);
@@ -88,7 +89,7 @@ impl Store {
         Ok(records)
     }
 
-    pub fn write(&mut self, record: Record) -> () {
+    pub fn write(&mut self, record: Record) {
         self.records.push(record);
     }
 
@@ -107,19 +108,17 @@ impl Store {
 
     pub fn read(
         &self,
-        start_time: Option<&DateTime<Utc>>,
-        end_time: Option<&DateTime<Utc>>,
-    ) -> Vec<&Record> {
+        start_time: &Option<DateTime<Utc>>,
+        end_time: &Option<DateTime<Utc>>,
+    ) -> Vec<Record> {
         self.records
             .iter()
             .filter(|r| filter_time!(start_time, >=)(r) && filter_time!(end_time, <=)(r))
+            .map(|r| r.to_owned())
             .collect()
     }
-    pub fn erase(
-        &mut self,
-        start_time: Option<&DateTime<Utc>>,
-        end_time: Option<&DateTime<Utc>>,
-    ) -> () {
-        self.records.retain(|r| !filter_time!(start_time, >=)(r) || !filter_time!(end_time, <=)(r))
+    pub fn erase(&mut self, start_time: &Option<DateTime<Utc>>, end_time: &Option<DateTime<Utc>>) {
+        self.records
+            .retain(|r| !filter_time!(start_time, >=)(r) || !filter_time!(end_time, <=)(r))
     }
 }

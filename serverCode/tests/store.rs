@@ -1,4 +1,4 @@
-use ::PeperoniServer::store::*;
+use ::peperoni_server::store::*;
 use chrono::{DateTime, Utc};
 use std::thread::sleep;
 #[test]
@@ -14,7 +14,7 @@ fn test_record_new_without_time() {
 fn test_store_open() {
     let store = Store::open("notexist.csv").unwrap();
     assert_eq!(store.path(), "notexist.csv");
-    assert_eq!(store.read(None, None).len(), 0);
+    assert_eq!(store.read(&None, &None).len(), 0);
 }
 
 #[test]
@@ -46,17 +46,17 @@ fn test_store_load_from_file() {
         ),
     ];
     let store = Store::open("./tests/test.csv").unwrap();
-    let records = store.read(None, None);
+    let records = store.read(&None, &None);
     assert_eq!(records.len(), 3);
     for (cr, sr) in correct_records.iter().zip(records.iter()) {
-        assert_eq!(cr, *sr);
+        assert_eq!(cr, sr);
     }
 }
 
 #[test]
 fn test_store_write() {
     let mut store = Store::open("write.csv").unwrap();
-    store.erase(None, None);
+    store.erase(&None, &None);
     assert_eq!(store.read(None, None).len(), 0);
     let record = Record::new_without_time(Some(1.0), Some(2.0), Some(3.0), Some(4.0));
     store.write(record);
@@ -97,17 +97,42 @@ fn test_store_erase() {
 }
 
 #[test]
-fn test_read_filter(){
+fn test_read_filter() {
     let mut store = Store::open("filter.csv").unwrap();
-    store.write(Record::new_without_time(Some(78.0),Some(25.0),Some(35.0),Some(2.0)));
+    store.write(Record::new_without_time(
+        Some(78.0),
+        Some(25.0),
+        Some(35.0),
+        Some(2.0),
+    ));
     sleep(std::time::Duration::from_millis(1));
-    store.write(Record::new_without_time(Some(7.0),Some(16.0),Some(0.0),Some(27.0)));
+    store.write(Record::new_without_time(
+        Some(7.0),
+        Some(16.0),
+        Some(0.0),
+        Some(27.0),
+    ));
     sleep(std::time::Duration::from_millis(1));
-    store.write(Record::new_without_time(Some(62.0),Some(42.0),Some(24.0),Some(9.0)));
+    store.write(Record::new_without_time(
+        Some(62.0),
+        Some(42.0),
+        Some(24.0),
+        Some(9.0),
+    ));
     sleep(std::time::Duration::from_millis(1));
-    store.write(Record::new_without_time(Some(78.0),Some(25.0),Some(35.0),Some(2.0)));
+    store.write(Record::new_without_time(
+        Some(78.0),
+        Some(25.0),
+        Some(35.0),
+        Some(2.0),
+    ));
     sleep(std::time::Duration::from_millis(1));
-    store.write(Record::new_without_time(Some(7.0),Some(16.0),Some(0.0),Some(27.0)));
+    store.write(Record::new_without_time(
+        Some(7.0),
+        Some(16.0),
+        Some(0.0),
+        Some(27.0),
+    ));
     let records = store.read(None, None);
     assert_eq!(records.len(), 5);
     let start_time = records[1].time().clone();
