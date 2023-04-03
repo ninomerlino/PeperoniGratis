@@ -11,7 +11,7 @@ class DataStore {
         this.last_update = Date.now();
     }
     async read_data(from_time) {
-        const response = await fetch("/api/read?from_time=" + from_time);
+        const response = await fetch("/api/read?start_time=" + from_time);
         if (response.ok) {
             const data = await response.json();
             return data;
