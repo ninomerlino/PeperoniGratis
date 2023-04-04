@@ -27,6 +27,7 @@ void SoilMoistureSensor::calibrate(){
 
 float SoilMoistureSensor::getMoisture(){
     raw = analogRead(readingPin);
-    moisture = map(raw, minValue, maxValue, 10000, 0)/100;;
+    moisture = map(raw, minValue, maxValue, 10000, 0)/100;
+    Serial.println("[SOIL] Raw value: "+ String(raw)+ " Percentage: "+String(moisture));
     return moisture;
 }
