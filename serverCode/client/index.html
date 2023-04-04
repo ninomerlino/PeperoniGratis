@@ -84,57 +84,74 @@
           <div class="card ">
             <header class="card-header has-background-primary">
               <p class="card-header-title">
-                Control
+                Battery over time
               </p>
             </header>
             <div class="card-content">
               <div class="content">
-                <form>
-                  <div class="field has-addons">
-                    <div class="control">
-                      <a class="button is-static">
-                        Time window
-                      </a>
-                    </div>
-                    <div class="control is-expanded">
-                      <input class="input" id="time_window" type="number" placeholder="Last x hours">
-                    </div>
-                    <div class="control">
-                      <a class="button is-primary" onclick="change_time_window()">
-                        Change
-                      </a>
-                    </div>
-                  </div>
-                  <div class="field">
-                    <div class="control is-expanded">
-                      <a class="button is-primary is-fullwidth" onclick="update()">
-                        Update
-                      </a>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <footer class="card-footer">
-          </footer>
-        </div>
-        <div class="tile is-child">
-          <div class="card ">
-            <header class="card-header has-background-primary">
-              <p class="card-header-title">
-                Log
-              </p>
-            </header>
-            <div class="card-content">
-              <div class="content">
+                <canvas id="battery_over_time_chart"></canvas>
               </div>
             </div>
             <footer class="card-footer">
             </footer>
           </div>
         </div>
-
+        <div class="tile is-vertical is-parent">
+          <div class="tile is-child">
+            <div class="card ">
+              <header class="card-header has-background-primary">
+                <p class="card-header-title">
+                  Control
+                </p>
+              </header>
+              <div class="card-content">
+                <div class="content">
+                  <form>
+                    <div class="field has-addons">
+                      <div class="control">
+                        <a class="button is-static">
+                          Record count
+                        </a>
+                      </div>
+                      <div class="control is-expanded">
+                        <input class="input" id="time_window" type="number" placeholder="Last x hours">
+                      </div>
+                      <div class="control">
+                        <a class="button is-primary" onclick="change_last_n()">
+                          Change
+                        </a>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <div class="control is-expanded">
+                        <a class="button is-primary is-fullwidth" onclick="update()">
+                          Update
+                        </a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <footer class="card-footer">
+            </footer>
+          </div>
+          <div class="tile is-child">
+            <div class="card ">
+              <header class="card-header has-background-primary">
+                <p class="card-header-title">
+                  Log
+                </p>
+              </header>
+              <div class="card-content">
+                <div class="content">
+                </div>
+              </div>
+              <footer class="card-footer">
+              </footer>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="tile is-vertical is-parent">
         <div class="tile is-child">

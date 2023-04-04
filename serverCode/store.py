@@ -40,7 +40,7 @@ class Record(BaseModel):
         '''
         dt, battery, temperature, humidity, moisture = csv_entry.replace('\n', '').split(",")
         if dt == "":
-            raise ValueError(f"Missing datetime in record {cvv_entry}")
+            raise ValueError(f"Missing datetime in record {csv_entry}")
         return Record(
             time= str(datetime.fromisoformat(dt)),
             battery= float(battery) if battery != "" else None,
@@ -82,17 +82,12 @@ class Store:
             for record in self.records:
                 f.write(record.to_csv() + "\n")
 
-    def read(self, from_time : datetime | None = None, to_time : datetime | None = None):
+    def read(self, last_n : Optional[int] = None):
         '''
             Reads the records from the store
             from_time: The time from which to read the records
             to_time: The time to which to read the records
         '''
-        local_records = self.records
-        if not from_time is None:
-            local_records = filter(lambda record: record >= from_time, local_records)
-        if not to_time is None:
-            local_records = filter(lambda record: record <= to_time, local_records)
-        return list(local_records)
+        return self.records[-last_n:] if last_n is not None else self.records
         
 

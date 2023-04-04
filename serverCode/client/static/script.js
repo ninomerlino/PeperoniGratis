@@ -3,15 +3,14 @@ class DataStore {
         this.data = [];
         this.last_update = Date.now();
         this.exipre_time = 60 * 1000;
-        this.time_window = 60 * 60 * 1000;// last hour
+        this.last_n = 50;// last hour
     }
     async update() {
-        let from_time = new Date(Date.now() - this.time_window).toISOString();
-        this.data = await this.read_data(from_time);
+        this.data = await this.read_data();
         this.last_update = Date.now();
     }
-    async read_data(from_time) {
-        const response = await fetch("/api/read?from_time=" + from_time);
+    async read_data() {
+        const response = await fetch("/api/read?last_n=" + this.last_n);
         if (response.ok) {
             const data = await response.json();
             return data;
@@ -19,8 +18,8 @@ class DataStore {
             throw new Error("Error reading data");
         }
     }
-    set_time_window(time) {
-        this.time_window = time * 1000;
+    set_last_n(last_n) {
+        this.last_n = last_n;
     }
     async get_data() {
         if (this.last_update + this.expire_time < Date.now()) {
@@ -61,7 +60,7 @@ function create_battery_chart(data){
                 datasets: [
                     {
                         label: "Battery Charge",
-                        data: data[data.length - 1]["battery"],
+                        data: [data[data.length - 1]["battery"]],
                     }
                 ]
             },
@@ -151,10 +150,10 @@ async function setup() {
     await dataStore.update();
     let data = await dataStore.get_data();
     if(data.length > 0){
-        create_battery_chart();
-        create_temperature_chart();
-        create_humidity_chart();
-        create_moisture_chart();
+        create_battery_chart(data);
+        create_temperature_chart(data);
+        create_humidity_chart(data);
+        create_moisture_chart(data);
         set_label("update_text", format_date(new Date(data[data.length - 1]["time"])));
         set_label("temperature_text", data[data.length - 1]["temperature"]);
         set_label("humidity_text", data[data.length - 1]["humidity"]);
@@ -205,9 +204,9 @@ async function update() {
     }
 }
 
-async function change_time_window(){
-    let hours = document.getElementById("time_window").value;
-    dataStore.set_time_window(hours * 60 * 60);
+async function change_last_n(){
+    let count = document.getElementById("time_window").value;
+    dataStore.set_last_n(count);
     await dataStore.update();
     update();
 }
