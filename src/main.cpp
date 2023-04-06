@@ -24,7 +24,7 @@ void setup() {
   battery = Battery(BATTERY_PIN);
   soil = SoilMoistureSensor(SOIL_PIN, 720, 3040);
   payload = Payload();
-  pump = Pump(PUMP_PIN);
+  pump = Pump(PUMP_PIN, 15, 75);
 
   delay(1000);
 
@@ -49,7 +49,7 @@ void execution(){
   delay(1000);
   payload.clear();
 
-  soil.monitor(battery.getRaw());
+  //soil.monitor(battery.getRaw());
 
   pump.irrigate(soil.getMoisture(battery.getRaw()));
 }
