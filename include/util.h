@@ -7,6 +7,7 @@
 #define PUMP_PIN 13
 #define SOIL_PIN 14
 #define AIR_PIN 15
-#define TIME_TO_SLEEP 60000
+#define MIN 60000000
+#define TIME_TO_SLEEP 60*MIN
 
 #endif
