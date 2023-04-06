@@ -12,4 +12,5 @@ class Battery{
         Battery() = default;
         ~Battery();	
         float getCharge();
+        int getRaw();
 };

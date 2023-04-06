@@ -16,11 +16,17 @@ float Battery::mapfloat(float x, float in_min, float in_max, float out_min, floa
 
 float Battery::getCharge()
 {
-    raw = analogRead(34);
+    raw = analogRead(readingPin);
     Serial.println("[BATT] Raw value: "+ String(raw));
-    raw = raw / 4095.0 * 3.3;
-    Serial.println("[BATT] Caluclated value: "+String(raw));
-    charge = mapfloat(raw, 0.0, 2.8, 0, 100);
-    Serial.println("[BATT] Mapped value: "+String(charge));
+    float nonCompensated = raw / 4095.0 * 3.3;
+    Serial.println("[BATT] Calculated value: "+String(nonCompensated));
+    charge = mapfloat(nonCompensated, 0.0, 2.8, 0, 100);
+    Serial.println("[BATT] Percentage: "+String(charge));
     return charge;
+}
+
+int Battery::getRaw()
+{
+    raw = analogRead(readingPin);
+    return raw;
 }

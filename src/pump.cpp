@@ -3,7 +3,7 @@
 Pump::Pump(int pin){
     this->pin = pin;
     this->time = 30000;
-    this->threshold = 50;
+    this->threshold = 75;
     pinMode(pin, OUTPUT);
 }
 
