@@ -2,10 +2,11 @@ use ::peperoni_server::store::{Record, Store};
 use chrono::{DateTime, Utc};
 use lazy_static::lazy_static;
 use ::peperoni_server::internal_error;
+use rocket::http::Status;
 use rocket::{fs::NamedFile};
 use std::path::{Path, PathBuf};
 use std::sync::{Mutex, Arc};
-use rocket::{routes, get};
+use rocket::{routes, get, post};
 use rocket::{fs, serde::json::Json};
 
 lazy_static! {
@@ -31,13 +32,23 @@ async fn read(start_time : Option<String>, end_time : Option<String>) -> interna
     Ok(Json(records))
 }
 
+#[post("/api/write", data = "<record>")]
+async fn write(record : Json<Record>) -> internal_error::Result<Status>{
+    let mut store = STORE.lock()?;
+    store.write(record.into_inner());
+    Ok(Status::Ok)
+}
+
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
-    let _rocket = rocket::build()
+    let web = rocket::build()
         .mount("/", routes![index, static_files,read])
-        .launch()
-        .await?;
-
+        .launch();
+    let arduino = rocket::build()
+        .mount("/", routes![write])
+        .launch();
+    web.await?;
+    arduino.await?;
     Ok(())
 }
 
