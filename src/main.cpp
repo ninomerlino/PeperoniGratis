@@ -22,7 +22,7 @@ void setup() {
 
   sender = Sender(SSID, PASSWORD, SERVER_ADDRESS, SERVER_PORT);
   battery = Battery(BATTERY_PIN);
-  soil = SoilMoistureSensor(SOIL_PIN, 720, 3040);
+  soil = SoilMoistureSensor(SOIL_PIN, 1100, 3490);
   payload = Payload();
   pump = Pump(PUMP_PIN, 15, 75);
 
@@ -41,6 +41,7 @@ void loop(){
 }
 
 void execution(){
+
   payload.addField("battery", battery.getCharge());
   payload.addField("moisture", soil.getMoisture(battery.getRaw()));
   payload.addField("temperature", 25);
@@ -51,5 +52,5 @@ void execution(){
 
   //soil.monitor(battery.getRaw());
 
-  pump.irrigate(soil.getMoisture(battery.getRaw()));
+  //pump.irrigate(soil.getMoisture(battery.getRaw()));
 }

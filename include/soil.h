@@ -7,12 +7,13 @@ class SoilMoistureSensor {
     int maxValue;
     int raw;
     float moisture;
+
     void calibrate();
   public:
     SoilMoistureSensor(int readingPin);
     SoilMoistureSensor(int readingPin, int minValue, int maxValue);
     SoilMoistureSensor() = default;
     float getMoisture();
-    float getMoisture(int batteryCharge);
+    float getMoisture(int rawBattery);
     void monitor(int batteryCharge);
 };

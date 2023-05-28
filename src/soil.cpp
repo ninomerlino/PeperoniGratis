@@ -37,10 +37,12 @@ float SoilMoistureSensor::getMoisture(){
     return moisture;
 }
 
-float SoilMoistureSensor::getMoisture(int batteryCharge){
+float SoilMoistureSensor::getMoisture(int rawBattery){
+    maxValue = rawBattery*1.141;
+    minValue = rawBattery*1.141 - 2400;
     raw = analogRead(readingPin);
-    moisture = map(raw, minValue, (batteryCharge*3)/2, 10000, 0)/100;
-    Serial.println("[SOIL] Raw value: "+ String(raw)+ ", Battery level: "+String(batteryCharge*3/2)+", Percentage: "+String(moisture));
+    moisture = map(raw, minValue, maxValue, 100, 0);
+    Serial.println("[SOIL] Raw value: "+ String(raw)+ ", Battery level: "+String(rawBattery)+", Percentage: "+String(moisture));
     return moisture;
 }
 
@@ -48,7 +50,7 @@ void SoilMoistureSensor::monitor(int batteryCharge){
     while(1){
         raw = analogRead(readingPin);
         moisture = map(raw, minValue, (batteryCharge*3)/2, 10000, 0)/100;
-        Serial.println("[SOIL] Raw value: "+ String(raw)+ ", Battery level: "+String(batteryCharge*3/2)+", Percentage: "+String(moisture));
+        Serial.println("[SOIL] Raw value: "+ String(raw)+ ", Battery level: "+String(batteryCharge)+", Percentage: "+String(moisture));
         delay(1000);
     }
 }

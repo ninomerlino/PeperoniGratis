@@ -13,4 +13,5 @@ class Battery{
         ~Battery();	
         float getCharge();
         int getRaw();
+        float getVoltage();
 };
