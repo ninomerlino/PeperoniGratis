@@ -8,6 +8,6 @@
 #define SOIL_PIN 32
 #define AIR_PIN 15
 #define US_TO_MIN (uint64_t) 60000000
-#define TIME_TO_SLEEP (uint64_t) 15*US_TO_MIN
+#define TIME_TO_SLEEP (uint64_t) 60*US_TO_MIN
 
 #endif

@@ -26,13 +26,13 @@ void setup() {
   payload = Payload();
   pump = Pump(PUMP_PIN, 15, 75);
 
-  delay(1000);
+  delay(100);
 
   execution();
 
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP);
   Serial.println("[TIME] Going to sleep now");
-  delay(1000);
+  delay(100);
   Serial.flush();
   esp_deep_sleep_start();
 }
@@ -44,8 +44,8 @@ void execution(){
 
   payload.addField("battery", battery.getCharge());
   payload.addField("moisture", soil.getMoisture(battery.getRaw()));
-  payload.addField("temperature", 25);
-  payload.addField("humidity", 50);
+  payload.addField("temperature", battery.getVoltage());
+  payload.addField("humidity", 0);
   sender.sendPostRequest("/api/write", payload.toString());
   delay(1000);
   payload.clear();
